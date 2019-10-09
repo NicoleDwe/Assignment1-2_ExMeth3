@@ -51,6 +51,7 @@ pacman::p_load(tidyverse,janitor, dplyr)
 Load the three data sets, after downloading them from dropbox and saving them in your working directory: \* Demographic data for the participants: <https://www.dropbox.com/s/w15pou9wstgc8fe/demo_train.csv?dl=0> \* Length of utterance data: <https://www.dropbox.com/s/usyauqm37a76of6/LU_train.csv?dl=0> \* Word data: <https://www.dropbox.com/s/8ng1civpl2aux58/token_train.csv?dl=0>
 
 ``` r
+#load data
 demo <- read.csv("demo_train.csv")
 lu <- read.csv("LU_train.csv")
 token <- read.csv("token_train.csv")

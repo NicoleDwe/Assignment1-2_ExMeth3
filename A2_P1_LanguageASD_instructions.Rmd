@@ -7,9 +7,9 @@ output:
     variant: markdown_github
 ---
     
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(include = FALSE)
+```{r}
+#knitr::opts_chunk$set(echo = TRUE)
+#knitr::opts_chunk$set(include = FALSE)
 ```
 
 # Assignment 2
@@ -76,7 +76,7 @@ Load necessary libraries : what will you need?
 - e.g. mixed effects models
 - e.g. something to plot with
 
-```{r Load Libraries, include = FALSE}
+```{r Load Libraries}
 
 #load packages
 library(pacman)
@@ -93,10 +93,8 @@ If you opened this Rmd file outside of a project, you will need some code to fin
 - Move to that directory (setwd(locpath))
 - Load the data you saved last time (use read_csv(fileName))
 
-```{r Load Data, include = FALSE}
-
+```{r Load Data}
 df <- read.csv("assignment1df.csv")
-
 ```
 
 ### Characterize the participants (Exercise 1)
