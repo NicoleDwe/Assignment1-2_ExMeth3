@@ -72,6 +72,7 @@ Load the three data sets, after downloading them from dropbox and saving them in
 * Word data: https://www.dropbox.com/s/8ng1civpl2aux58/token_train.csv?dl=0
 
 ```{r}
+#load data
 demo <- read.csv("demo_train.csv")
 lu <- read.csv("LU_train.csv")
 token <- read.csv("token_train.csv")
