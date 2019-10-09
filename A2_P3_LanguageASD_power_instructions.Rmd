@@ -1,0 +1,309 @@
+---
+title: "Assignment 2 - Language Development in ASD - Power and simulations"
+author: "Nicole Dwenger"
+date: "09.10.2019"
+output:   
+  md_document:
+    variant: markdown_github
+---
+
+```{r setup, include=FALSE}
+#knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Welcome to the third exciting part of the Language Development in ASD exercise
+
+In this part of the assignment, we try to figure out how a new study should be planned (i.e. how many participants?) in order to have enough power to replicate the findings (ensuring our sample size is adequate, our alpha at 0.05 and our beta at 0.8):
+1- if we trust the estimates of the current study. Report the power analysis and comment on what you can (or cannot) use its estimates for.
+2- if we are skeptical of the current study. Report the power analysis and comment on what you can (or cannot) use its estimates for.
+3- if we only have access to 30 participants. Identify the power for each relevant effect and discuss whether it's worth to run the study and why
+The list above is also what you should discuss in your code-less report.
+
+
+## Learning objectives
+
+- Learn how to calculate statistical power
+- Critically appraise how to apply frequentist statistical power
+
+### Exercise 1
+
+How much power does your study have (if your model estimates are quite right)?
+- Load your dataset (both training and testing), fit your favorite model, assess power for your effects of interest (probably your interactions).
+- Report the power analysis and comment on what you can (or cannot) use its estimates for.
+- Test how many participants you would have to have to replicate the findings (assuming the findings are correct)
+
+N.B. Remember that main effects are tricky once you have interactions in the model (same for 2-way interactions w 3-way interactions in the model). If you want to test the power of main effects, run a model excluding the interactions.
+N.B. Check this paper: https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12504
+You will be using:
+- powerSim() to calculate power
+- powerCurve() to estimate the needed number of participants
+- extend() to simulate more participants
+
+```{r}
+##### PREP ######################################################
+
+#load packages
+library(githubinstall, pacman)
+pacman::p_load(tidyverse, lmerTest, simr)
+library(githubinstall)
+
+## Clean up function, included to inspire you
+CleanUpData <- function(Demo,LU,Word){
+  
+  Speech <- merge(LU, Word) %>% 
+    rename(
+      Child.ID = SUBJ, 
+      Visit=VISIT) %>%
+    mutate(
+      Visit = as.numeric(str_extract(Visit, "\\d")),
+      Child.ID = gsub("\\.","", Child.ID)
+      ) %>%
+    dplyr::select(
+      Child.ID, Visit, MOT_MLU, CHI_MLU, types_MOT, types_CHI, tokens_MOT, tokens_CHI
+    )
+  
+  Demo <- Demo %>%
+    dplyr::select(
+      Child.ID, Visit, Ethnicity, Diagnosis, Gender, Age, ADOS, MullenRaw, ExpressiveLangRaw, Socialization
+    ) %>%
+    mutate(
+      Child.ID = gsub("\\.","", Child.ID)
+    )
+    
+  Data=merge(Demo,Speech,all=T)
+  
+  Data1= Data %>% 
+     subset(Visit=="1") %>% 
+     dplyr::select(Child.ID, ADOS, ExpressiveLangRaw, MullenRaw, Socialization) %>%
+     rename(Ados1 = ADOS, 
+            verbalIQ1 = ExpressiveLangRaw, 
+            nonVerbalIQ1 = MullenRaw,
+            Socialization1 = Socialization) 
+  
+  Data=merge(Data, Data1, all=T) %>%
+    mutate(
+      Child.ID = as.numeric(as.factor(as.character(Child.ID))),
+      Visit = as.numeric(as.character(Visit)),
+      Gender = recode(Gender, 
+         "1" = "M",
+         "2" = "F"),
+      Diagnosis = recode(Diagnosis,
+         "A"  = "ASD",
+         "B"  = "TD")
+    )
+
+  return(Data)
+}
+
+
+
+##### LOAD DATA ######################################################
+
+#train data
+lu_train <- read.csv("LU_train.csv")
+demo_train <- read.csv("demo_train.csv")
+token_train <- read.csv("token_train.csv")
+train_data1 <- CleanUpData(Demo = demo_train, LU = lu_train, Word = token_train)
+train_data <- subset(train_data1, !is.na(CHI_MLU))
+
+#test data
+lu_test <- read.csv("LU_test.csv")
+demo_test <- read.csv("demo_test.csv")
+token_test <- read.csv("token_test.csv")
+test_data1 <- CleanUpData(Demo = demo_test, LU = lu_test, Word = token_test)
+test_data <- subset(test_data1, !is.na(CHI_MLU))
+
+#put two dataframes together 
+test_data$Child.ID <- as.factor(test_data$Child.ID)
+train_data$Child.ID <- as.factor(train_data$Child.ID)
+levels(test_data$Child.ID) <- c(66:71)
+data <- merge(train_data, test_data, all = TRUE)
+
+
+##### CREATE MODELS ######################################################
+
+#our model
+THEmodel <- lmer(CHI_MLU ~ Visit*Diagnosis + verbalIQ1*MOT_MLU + (1|Child.ID), 
+              data = data, REML = F,
+              control = lmerControl(optimizer = "nloptwrap", calc.derivs = FALSE))
+
+THEmodel1 <- lmer(CHI_MLU ~ Visit + Diagnosis + verbalIQ1 + MOT_MLU + (1|Child.ID), 
+              data = data, REML = F,
+              control = lmerControl(optimizer = "nloptwrap", calc.derivs = FALSE))
+
+summary(THEmodel)
+
+
+##### TEST POWER ######################################################
+
+#Visit:Diagnosis 
+simVD = powerSim(THEmodel, fixed("Visit:Diagnosis"), nsim = 1000, seed = 1)
+simVD
+#100%
+
+#verbalIQ1:MOT_MLU
+simVeM = powerSim(THEmodel, fixed("verbalIQ1:MOT_MLU"), nsim = 1000, seed = 1)
+simVeM
+#72.40%
+
+#Visit
+simV = powerSim(THEmodel1, fixed("Visit"), nsim = 1000, seed = 1)
+simV
+#100%
+
+#Diagnosis 
+simD = powerSim(THEmodel1, fixed("Diagnosis"), nsim = 1000, seed = 1)
+simD
+#88%
+
+#verbalIQ
+simVe = powerSim(THEmodel1, fixed("verbalIQ1"), nsim = 1000, seed = 1)
+simVe
+#100%
+
+#MOT_MLU
+simM = powerSim(THEmodel1, fixed("MOT_MLU"), nsim = 1000, seed = 1)
+simM
+#100%
+
+##### HOW MANY PARTICIPANT NEEDED TO REPLICATE? ######################################################
+
+#extendedmodel 
+THEmodel_extend <- extend(THEmodel, along = "Child.ID", n = 100)
+THEmodel1_extend <- extend(THEmodel1, along = "Child.ID", n = 100)
+
+#Visit:Diagnosis
+pc1 <- powerCurve(THEmodel, fixed("Visit:Diagnosis"), along = "Child.ID", nsim = 1000, breaks = seq(from = 5, to = 70, by = 5), seed = 1)
+pc1
+plot(pc1)
+#around 9 participants
+
+#verbalIQ1:MOT_MLU
+pc2 <- powerCurve(THEmodel_extend, fixed("verbalIQ1:MOT_MLU"), along = "Child.ID", breaks = seq(from = 5, to = 100, by = 5), nsim = 1000, seed = 1)
+pc2
+plot(pc2)
+#around 75 participants
+
+#Visit
+pc3 <- powerCurve(THEmodel1, fixed("Visit"), along = "Child.ID", nsim = 1000, breaks = seq(from = 1, to =70, by = 5), seed = 1)
+pc3
+plot(pc3)
+#around 7 participants
+
+#Diagnosis
+pc4 <- powerCurve(THEmodel1_extend, fixed("Diagnosis"), along = "Child.ID", nsim = 1000, breaks = seq(from = 1, to = 100, by = 5), seed = 1)
+pc4
+plot(pc4)
+#around 60 participants
+
+#verbalIQ1
+pc5 <- powerCurve(THEmodel1, fixed("verbalIQ1"), along = "Child.ID", nsim = 1000, breaks = seq(from = 1, to = 70, by = 5), seed = 1)
+pc5
+plot(pc5)
+#around 9 participants
+
+#MOT_MLU
+pc6 <- powerCurve(THEmodel1, fixed("MOT_MLU"), along = "Child.ID", nsim = 1000, breaks = seq(from = 1, to = 70, by = 5), seed = 1)
+pc6
+plot(pc6)
+#around 9 participants
+
+```
+
+
+### Exercise 2
+
+How would you perform a more conservative power analysis?
+- Identify and justify a minimum effect size for each of your relevant effects
+- take the model from exercise 1 and replace the effects with the minimum effect size that you'd accept.
+- assess the power curve by Child.ID, identifying an ideal number of participants to estimate each effect
+- if your power estimates do not reach an acceptable threshold simulate additional participants and repeat the previous analysis
+- Report the power analysis and comment on what you can (or cannot) use its estimates for.
+
+```{r}
+#### SET MINIMUM EFFECT ####
+#current effect sizes for the effects 
+fixef(THEmodel)["Visit:DiagnosisTD"] #0.23
+fixef(THEmodel)["verbalIQ1:MOT_MLU"] #0.019
+fixef(THEmodel1)["Visit"] # 0.187
+fixef(THEmodel1)["DiagnosisTD"] #0.28
+fixef(THEmodel1)["verbalIQ1"] #0.069
+fixef(THEmodel1)["MOT_MLU"] #0.387
+
+#get sd and 20% of it
+sd(data$CHI_MLU) #20% of sd (0.92) = 0.18
+
+#create models again to change the effects in them 
+THEmodel_fix <- lmer(CHI_MLU ~ Visit*Diagnosis + verbalIQ1*MOT_MLU + (1|Child.ID), 
+              data = data, REML = F,
+              control = lmerControl(optimizer = "nloptwrap", calc.derivs = FALSE))
+
+THEmodel1_fix <- lmer(CHI_MLU ~ Visit + Diagnosis + verbalIQ1 + MOT_MLU + (1|Child.ID), 
+              data = data, REML = F,
+              control = lmerControl(optimizer = "nloptwrap", calc.derivs = FALSE))
+
+#replace minimum effect sizes 
+fixef(THEmodel_fix)["Visit:DiagnosisTD"] = 0.2
+fixef(THEmodel_fix)["verbalIQ1:MOT_MLU"] = 0.015 #is this even relevant then? 
+fixef(THEmodel1_fix)["Visit"] = 0.15
+fixef(THEmodel1_fix)["DiagnosisTD"] = 0.25
+fixef(THEmodel1_fix)["verbalIQ1"] = 0.05
+fixef(THEmodel1_fix)["MOT_MLU"] = 0.3
+
+#extend 
+THEmodel_fix__extend <- extend(THEmodel_fix, along = "Child.ID", n = 150)
+THEmodel1_fix_extend <- extend(THEmodel1_fix, along = "Child.ID", n = 150)
+
+#Visit:Diagnosis
+pc1.1 <- powerCurve(THEmodel_fix, fixed("Visit:Diagnosis"), along = "Child.ID", nsim = 1000, breaks = seq(from = 1, to = 70, by = 5), seed = 1)
+pc1.1
+plot(pc1.1)
+#around 10 participants
+
+#verbalIQ1:MOT_MLU
+pc2.1 <- powerCurve(THEmodel_fix_extend, fixed("verbalIQ1:MOT_MLU"), along = "Child.ID", breaks = seq(from = 1, to = 150, by = 10), nsim = 1000, seed = 1)
+pc2.1
+plot(pc2.1)
+#around 130 participants
+
+#Visit
+pc3.1 <- powerCurve(THEmodel1_fix, fixed("Visit"), along = "Child.ID", nsim = 1000, breaks = seq(from = 1, to = 70, by = 5), seed = 1)
+pc3.1
+plot(pc3.1)
+#around 8 participants
+
+#Diagnosis
+pc4.1 <- powerCurve(THEmodel1_fix_extend, fixed("Diagnosis"), along = "Child.ID", nsim = 1000, breaks = seq(from = 1, to = 150, by = 5), seed = 1)
+pc4.1
+plot(pc4.1)
+#around 75 participants
+
+#verbalIQ1
+pc5.1 <- powerCurve(THEmodel1_fix, fixed("verbalIQ1"), along = "Child.ID", nsim = 1000, breaks = seq(from = 1, to = 70, by = 5), seed = 1)
+pc5.1
+plot(pc5.1)
+#around 19 participants
+
+#MOT_MLU
+pc6.1 <- powerCurve(THEmodel1_fix, fixed("MOT_MLU"), along = "Child.ID", nsim = 1000, breaks = seq(from = 1, to = 70, by = 5), seed = 1)
+pc6.1
+plot(pc6.1)
+#around  participants
+
+
+```
+
+
+### Exercise 3
+
+Assume you have only the resources to collect 30 kids (15 with ASD and 15 TDs). Identify the power for each relevant effect and discuss whether it's worth to run the study and why
+
+```{r}
+pc1.1 #Visit:Diagnosis 100% for 30 
+pc2.1 #verbalIQ1:MOT_MLU 23% for 30
+pc3.1 #Visit #100% for 30
+pc4.1 #Diagnosis 49% for 30 
+pc5.1 #verbalIQ1 99% for 30 
+pc6.1 #MOT_MLU 98% for 30 
+
+```
