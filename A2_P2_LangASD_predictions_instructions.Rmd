@@ -47,7 +47,7 @@ How did your models from last time perform? In this exercise you have to compare
 - optional: predictions are never certain, can you identify the uncertainty of the predictions? (e.g. google predictinterval())
 
 
-```{r, include = FALSE}
+```{r}
 #load packages
 pacman::p_load(readr,dplyr,stringr,lmerTest,Metrics,caret,cvms, groupdata2, knitr, gridExtra)
 
@@ -160,7 +160,7 @@ In this exercise you have to use cross-validation to calculate the predictive er
 
 #### PREP ####
 #Kenneth function for convergenece issues
-lmerControl(optCtrl=list(xtol_abs=1e-8, ftol_abs=1e-8))
+#lmerControl(optCtrl=list(xtol_abs=1e-8, ftol_abs=1e-8))
 
 #### CV BASIC MODEL ####
 #Create the basic model of ChildMLU as a function of Time and Diagnosis (don't forget the random effects!).
