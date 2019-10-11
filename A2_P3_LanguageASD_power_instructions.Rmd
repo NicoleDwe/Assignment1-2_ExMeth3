@@ -137,32 +137,32 @@ summary(THEmodel)
 ##### TEST POWER ######################################################
 
 #Visit:Diagnosis 
-simVD = powerSim(THEmodel, fixed("Visit:Diagnosis"), nsim = 1000, seed = 1)
+simVD = powerSim(THEmodel, fixed("Visit:Diagnosis"), nsim = 1000, seed = 1, progress = F)
 simVD
 #100%
 
 #verbalIQ1:MOT_MLU
-simVeM = powerSim(THEmodel, fixed("verbalIQ1:MOT_MLU"), nsim = 1000, seed = 1)
+simVeM = powerSim(THEmodel, fixed("verbalIQ1:MOT_MLU"), nsim = 1000, seed = 1, progress = F)
 simVeM
 #72.40%
 
 #Visit
-simV = powerSim(THEmodel1, fixed("Visit"), nsim = 1000, seed = 1)
+simV = powerSim(THEmodel1, fixed("Visit"), nsim = 1000, seed = 1, progress = F)
 simV
 #100%
 
 #Diagnosis 
-simD = powerSim(THEmodel1, fixed("Diagnosis"), nsim = 1000, seed = 1)
+simD = powerSim(THEmodel1, fixed("Diagnosis"), nsim = 1000, seed = 1, progress = F)
 simD
 #88%
 
 #verbalIQ
-simVe = powerSim(THEmodel1, fixed("verbalIQ1"), nsim = 1000, seed = 1)
+simVe = powerSim(THEmodel1, fixed("verbalIQ1"), nsim = 1000, seed = 1, progress = F)
 simVe
 #100%
 
 #MOT_MLU
-simM = powerSim(THEmodel1, fixed("MOT_MLU"), nsim = 1000, seed = 1)
+simM = powerSim(THEmodel1, fixed("MOT_MLU"), nsim = 1000, seed = 1, progress = F)
 simM
 #100%
 
@@ -173,37 +173,37 @@ THEmodel_extend <- extend(THEmodel, along = "Child.ID", n = 100)
 THEmodel1_extend <- extend(THEmodel1, along = "Child.ID", n = 100)
 
 #Visit:Diagnosis
-pc1 <- powerCurve(THEmodel, fixed("Visit:Diagnosis"), along = "Child.ID", nsim = 1000, breaks = seq(from = 5, to = 70, by = 5), seed = 1)
+pc1 <- powerCurve(THEmodel, fixed("Visit:Diagnosis"), along = "Child.ID", nsim = 1000, breaks = seq(from = 5, to = 70, by = 5), seed = 1, progress = F)
 pc1
 plot(pc1)
 #around 9 participants
 
 #verbalIQ1:MOT_MLU
-pc2 <- powerCurve(THEmodel_extend, fixed("verbalIQ1:MOT_MLU"), along = "Child.ID", breaks = seq(from = 5, to = 100, by = 5), nsim = 1000, seed = 1)
+pc2 <- powerCurve(THEmodel_extend, fixed("verbalIQ1:MOT_MLU"), along = "Child.ID", breaks = seq(from = 5, to = 100, by = 5), nsim = 1000, seed = 1, progress = F)
 pc2
 plot(pc2)
 #around 75 participants
 
 #Visit
-pc3 <- powerCurve(THEmodel1, fixed("Visit"), along = "Child.ID", nsim = 1000, breaks = seq(from = 1, to =70, by = 5), seed = 1)
+pc3 <- powerCurve(THEmodel1, fixed("Visit"), along = "Child.ID", nsim = 1000, breaks = seq(from = 1, to =70, by = 5), seed = 1, progress = F)
 pc3
 plot(pc3)
 #around 7 participants
 
 #Diagnosis
-pc4 <- powerCurve(THEmodel1_extend, fixed("Diagnosis"), along = "Child.ID", nsim = 1000, breaks = seq(from = 1, to = 100, by = 5), seed = 1)
+pc4 <- powerCurve(THEmodel1_extend, fixed("Diagnosis"), along = "Child.ID", nsim = 1000, breaks = seq(from = 1, to = 100, by = 5, progress = F), seed = 1)
 pc4
 plot(pc4)
 #around 60 participants
 
 #verbalIQ1
-pc5 <- powerCurve(THEmodel1, fixed("verbalIQ1"), along = "Child.ID", nsim = 1000, breaks = seq(from = 1, to = 70, by = 5), seed = 1)
+pc5 <- powerCurve(THEmodel1, fixed("verbalIQ1"), along = "Child.ID", nsim = 1000, breaks = seq(from = 1, to = 70, by = 5), seed = 1, progress = F)
 pc5
 plot(pc5)
 #around 9 participants
 
 #MOT_MLU
-pc6 <- powerCurve(THEmodel1, fixed("MOT_MLU"), along = "Child.ID", nsim = 1000, breaks = seq(from = 1, to = 70, by = 5), seed = 1)
+pc6 <- powerCurve(THEmodel1, fixed("MOT_MLU"), along = "Child.ID", nsim = 1000, breaks = seq(from = 1, to = 70, by = 5), seed = 1, progress = F)
 pc6
 plot(pc6)
 #around 9 participants
@@ -251,41 +251,41 @@ fixef(THEmodel1_fix)["verbalIQ1"] = 0.05
 fixef(THEmodel1_fix)["MOT_MLU"] = 0.3
 
 #extend 
-THEmodel_fix__extend <- extend(THEmodel_fix, along = "Child.ID", n = 150)
+THEmodel_fix_extend <- extend(THEmodel_fix, along = "Child.ID", n = 150)
 THEmodel1_fix_extend <- extend(THEmodel1_fix, along = "Child.ID", n = 150)
 
 #Visit:Diagnosis
-pc1.1 <- powerCurve(THEmodel_fix, fixed("Visit:Diagnosis"), along = "Child.ID", nsim = 1000, breaks = seq(from = 1, to = 70, by = 5), seed = 1)
+pc1.1 <- powerCurve(THEmodel_fix, fixed("Visit:Diagnosis"), along = "Child.ID", nsim = 1000, breaks = seq(from = 1, to = 70, by = 5), seed = 1, progress = F)
 pc1.1
 plot(pc1.1)
 #around 10 participants
 
 #verbalIQ1:MOT_MLU
-pc2.1 <- powerCurve(THEmodel_fix_extend, fixed("verbalIQ1:MOT_MLU"), along = "Child.ID", breaks = seq(from = 1, to = 150, by = 10), nsim = 1000, seed = 1)
+pc2.1 <- powerCurve(THEmodel_fix_extend, fixed("verbalIQ1:MOT_MLU"), along = "Child.ID", breaks = seq(from = 1, to = 150, by = 10), nsim = 1000, seed = 1, progress = F)
 pc2.1
 plot(pc2.1)
 #around 130 participants
 
 #Visit
-pc3.1 <- powerCurve(THEmodel1_fix, fixed("Visit"), along = "Child.ID", nsim = 1000, breaks = seq(from = 1, to = 70, by = 5), seed = 1)
+pc3.1 <- powerCurve(THEmodel1_fix, fixed("Visit"), along = "Child.ID", nsim = 1000, breaks = seq(from = 1, to = 70, by = 5), seed = 1, progress = F)
 pc3.1
 plot(pc3.1)
 #around 8 participants
 
 #Diagnosis
-pc4.1 <- powerCurve(THEmodel1_fix_extend, fixed("Diagnosis"), along = "Child.ID", nsim = 1000, breaks = seq(from = 1, to = 150, by = 5), seed = 1)
+pc4.1 <- powerCurve(THEmodel1_fix_extend, fixed("Diagnosis"), along = "Child.ID", nsim = 1000, breaks = seq(from = 1, to = 150, by = 5), seed = 1, progress = F)
 pc4.1
 plot(pc4.1)
 #around 75 participants
 
 #verbalIQ1
-pc5.1 <- powerCurve(THEmodel1_fix, fixed("verbalIQ1"), along = "Child.ID", nsim = 1000, breaks = seq(from = 1, to = 70, by = 5), seed = 1)
+pc5.1 <- powerCurve(THEmodel1_fix, fixed("verbalIQ1"), along = "Child.ID", nsim = 1000, breaks = seq(from = 1, to = 70, by = 5), seed = 1, progress = F)
 pc5.1
 plot(pc5.1)
 #around 19 participants
 
 #MOT_MLU
-pc6.1 <- powerCurve(THEmodel1_fix, fixed("MOT_MLU"), along = "Child.ID", nsim = 1000, breaks = seq(from = 1, to = 70, by = 5), seed = 1)
+pc6.1 <- powerCurve(THEmodel1_fix, fixed("MOT_MLU"), along = "Child.ID", nsim = 1000, breaks = seq(from = 1, to = 70, by = 5), seed = 1, progress = F)
 pc6.1
 plot(pc6.1)
 #around  participants
