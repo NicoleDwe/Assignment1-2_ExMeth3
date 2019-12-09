@@ -93,7 +93,6 @@ token_train <- read.csv("token_train.csv")
 train_data1 <- CleanUpData(Demo = demo_train, LU = lu_train, Word = token_train)
 train_data <- subset(train_data1, !is.na(CHI_MLU))
 
-
 #test data
 lu_test <- read.csv("LU_test.csv")
 demo_test <- read.csv("demo_test.csv")
@@ -169,38 +168,31 @@ fold_data <- groupdata2::fold(train_data, k = 5,
 fold_data %>% head(15) %>% kable()
 ```
 
-|  Child.ID|  Visit| Ethnicity    | Diagnosis | Gender |    Age|  ADOS|  MullenRaw|  ExpressiveLangRaw|  Socialization|  MOT\_MLU|    CHI\_MLU|  types\_MOT|  types\_CHI|  tokens\_MOT|  tokens\_CHI|  Ados1|  verbalIQ1|  nonVerbalIQ1|  Socialization1| .folds |
-|---------:|------:|:-------------|:----------|:-------|------:|-----:|----------:|------------------:|--------------:|---------:|-----------:|-----------:|-----------:|------------:|------------:|------:|----------:|-------------:|---------------:|:-------|
-|         5|      1| White/Latino | ASD       | M      |  31.03|     8|         31|                 27|             82|  3.459370|   0.0816450|         379|         102|         2009|          269|      8|         27|            31|              82| 1      |
-|         5|      2| White/Latino | ASD       | M      |  35.30|    NA|         NA|                 NA|            115|  4.130337|   0.5884830|         343|         170|         1657|          555|      8|         27|            31|              82| 1      |
-|         5|      3| White/Latino | ASD       | M      |  38.90|    NA|         NA|                 NA|             81|  3.818681|   1.6276651|         388|         165|         1788|          490|      8|         27|            31|              82| 1      |
-|         5|      4| White/Latino | ASD       | M      |  43.13|    NA|         41|                 NA|             77|  4.301624|   1.3437490|         356|         163|         1711|          479|      8|         27|            31|              82| 1      |
-|         5|      5| White/Latino | ASD       | M      |  47.40|     9|         NA|                 NA|             79|  4.602851|   2.1993568|         397|         146|         2082|          539|      8|         27|            31|              82| 1      |
-|         5|      6| White/Latino | ASD       | M      |  51.37|    NA|         44|                 44|             74|  3.532374|   1.3666563|         410|         166|         2171|          738|      8|         27|            31|              82| 1      |
-|         7|      1| Bangladeshi  | ASD       | F      |  26.17|    17|         20|                 17|             68|  2.618729|  -1.1122373|         212|           4|          761|           29|     17|         17|            20|              68| 1      |
-|         7|      2| Bangladeshi  | ASD       | F      |  30.27|    NA|         NA|                 NA|             74|  1.995885|  -1.3726361|         140|          29|          464|          149|     17|         17|            20|              68| 1      |
-|         7|      3| Bangledeshi  | ASD       | F      |  34.57|    NA|         NA|                 NA|             70|  1.856115|  -0.9274664|          74|          12|          250|           62|     17|         17|            20|              68| 1      |
-|         7|      4| Bangladeshi  | ASD       | F      |  38.47|    NA|         33|                 NA|             66|  2.035714|  -0.3350264|         125|          50|          360|          205|     17|         17|            20|              68| 1      |
-|         7|      5| Bangladeshi  | ASD       | F      |  42.43|     8|         NA|                 NA|             68|  1.948454|  -0.4198130|          92|          80|          209|          349|     17|         17|            20|              68| 1      |
-|         7|      6| Bangladeshi  | ASD       | F      |  46.53|    NA|         39|                 26|             74|  2.483146|  -0.5717455|         158|          66|          536|          300|     17|         17|            20|              68| 1      |
-|         8|      1| White        | ASD       | F      |  41.00|    18|         24|                 14|             65|  2.244755|  -0.8248159|         152|          29|          578|          130|     18|         14|            24|              65| 1      |
-|         8|      2| White        | ASD       | F      |  49.20|    NA|         NA|                 NA|             63|  2.417344|  -0.7627760|         186|          42|          755|          169|     18|         14|            24|              65| 1      |
-|         8|      3| White        | ASD       | F      |  49.20|    NA|         NA|                 NA|             63|  2.633929|  -0.6797892|         196|          50|          768|          210|     18|         14|            24|              65| 1      |
+|  Child.ID|  Visit| Ethnicity        | Diagnosis | Gender |    Age|  ADOS|  MullenRaw|  ExpressiveLangRaw|  Socialization|  MOT\_MLU|    CHI\_MLU|  types\_MOT|  types\_CHI|  tokens\_MOT|  tokens\_CHI|  Ados1|  verbalIQ1|  nonVerbalIQ1|  Socialization1| .folds |
+|---------:|------:|:-----------------|:----------|:-------|------:|-----:|----------:|------------------:|--------------:|---------:|-----------:|-----------:|-----------:|------------:|------------:|------:|----------:|-------------:|---------------:|:-------|
+|        21|      1| White            | ASD       | M      |  35.80|    11|         28|                 20|             88|  2.539823|  -0.6274463|         283|          89|         1019|          227|     11|         20|            28|              88| 1      |
+|        21|      2| White            | ASD       | M      |  39.93|    NA|         NA|                 NA|            102|  3.170000|  -0.4998440|         315|          86|         1316|          335|     11|         20|            28|              88| 1      |
+|        21|      3| White            | ASD       | M      |  43.90|    NA|         NA|                 NA|             79|  3.615176|  -0.0799004|         298|          88|         1159|          330|     11|         20|            28|              88| 1      |
+|        21|      4| White            | ASD       | M      |  47.83|    NA|         35|                 NA|             74|  2.762463|  -0.3681886|         248|          87|          855|          455|     11|         20|            28|              88| 1      |
+|        21|      5| White            | ASD       | M      |  51.97|     9|         NA|                 NA|             72|  4.157191|  -0.4022428|         328|          45|         1142|          197|     11|         20|            28|              88| 1      |
+|        21|      6| White            | ASD       | M      |  56.73|    NA|         30|                 32|             72|  3.156695|   0.1606802|         256|          55|          995|          274|     11|         20|            28|              88| 1      |
+|        29|      1| White            | ASD       | M      |  30.40|    11|         32|                 33|            100|  4.690751|   1.4198582|         278|         119|         1450|          483|     11|         33|            32|             100| 1      |
+|        29|      3| White            | ASD       | M      |  38.60|    NA|         NA|                 NA|             83|  4.316279|   1.9412932|         333|         307|         1668|         1293|     11|         33|            32|             100| 1      |
+|        29|      4| White            | ASD       | M      |  42.63|    NA|         41|                 NA|             86|  4.857143|   1.5440836|         398|         188|         2518|          714|     11|         33|            32|             100| 1      |
+|        29|      5| White            | ASD       | M      |  46.93|     4|         NA|                 NA|             97|  4.345515|   1.3114850|         437|         261|         2410|         1154|     11|         33|            32|             100| 1      |
+|        29|      6| White            | ASD       | M      |  51.00|    NA|         46|                 46|             90|  4.111413|   1.3840795|         452|         273|         3076|         1249|     11|         33|            32|             100| 1      |
+|        36|      1| African American | ASD       | F      |  25.33|    14|         25|                 11|             76|  2.287293|  -0.7373649|         206|          13|          788|           35|     14|         11|            25|              76| 1      |
+|        36|      2| African American | ASD       | F      |  29.70|    NA|         NA|                 NA|             74|  2.879925|  -0.9882048|         285|           2|         1393|           10|     14|         11|            25|              76| 1      |
+|        36|      3| African American | ASD       | F      |  34.10|    NA|         NA|                 NA|             74|  3.404959|  -0.9045915|         272|           3|         1504|           26|     14|         11|            25|              76| 1      |
+|        36|      4| African American | ASD       | F      |  36.93|    NA|         36|                 NA|             86|  3.110933|  -0.7774150|         281|          18|         1726|          142|     14|         11|            25|              76| 1      |
 
 ``` r
 #cross-validate single model
 CV1 <- cross_validate(fold_data, "CHI_MLU ~ Diagnosis + Visit + (1|Child.ID) + (0+Visit|Child.ID)",
                       fold_cols = '.folds',
                       family = 'gaussian',
-                        control = lmerControl(
-                          optimizer = "nloptwrap",
-                          calc.dervis = FALSE, 
-                          optCtrl = list(
-                            xtol_abs = 1e-10,
-                            xtol_abs = 1e-10,
-                            maxeval = 1000000),
-                      rm_nc = F,
-                      REML = FALSE))
+                        rm_nc = F,
+                        REML = FALSE)
 ```
 
     ## Registered S3 method overwritten by 'MuMIn':
@@ -208,12 +200,14 @@ CV1 <- cross_validate(fold_data, "CHI_MLU ~ Diagnosis + Visit + (1|Child.ID) + (
     ##   predict.merMod lme4
 
 ``` r
+#control = lmerControl(optimizer = "nloptwrap",calc.dervis = FALSE, optCtrl = list(xtol_abs = 1e-10,xtol_abs = 1e-10,maxeval = 1000000),
+                      
 CV1 %>% select_metrics() %>% kable()
 ```
 
 |       RMSE|        MAE|        r2m|        r2c|       AIC|      AICc|       BIC| Dependent | Fixed           | Random                          |
 |----------:|----------:|----------:|----------:|---------:|---------:|---------:|:----------|:----------------|:--------------------------------|
-|  0.8816057|  0.6985982|  0.1985533|  0.7909041|  551.9263|  552.2323|  573.7686| CHI\_MLU  | Diagnosis+Visit | (1|Child.ID)+(0+Visit|Child.ID) |
+|  0.8945133|  0.7006942|  0.1821403|  0.8133701|  522.2534|  522.5594|  544.0958| CHI\_MLU  | Diagnosis+Visit | (1|Child.ID)+(0+Visit|Child.ID) |
 
 ``` r
 tableCV1 <- CV1[1:7]
@@ -248,33 +242,26 @@ mixed_models <- c("CHI_MLU ~ Diagnosis + (1 | Child.ID)",
 CV_mixed <- cross_validate(fold_data, mixed_models,
                       fold_cols = '.folds',
                       family = 'gaussian',
-                        control = lmerControl(
-                          optimizer = "nloptwrap",
-                          calc.dervis = FALSE, 
-                          optCtrl = list(
-                            xtol_abs = 1e-10,
-                            xtol_abs = 1e-10,
-                            maxeval = 1000000),
                       rm_nc = F,
-                      REML = FALSE))
+                      REML = FALSE) 
 
 CV_mixed %>% select_metrics() %>% kable()
 ```
 
 |       RMSE|        MAE|        r2m|        r2c|       AIC|      AICc|       BIC| Dependent | Fixed                                   | Random       |
 |----------:|----------:|----------:|----------:|---------:|---------:|---------:|:----------|:----------------------------------------|:-------------|
-|  0.9252375|  0.7562118|  0.1492083|  0.4161343|  712.9271|  713.0717|  727.4887| CHI\_MLU  | Diagnosis                               | (1|Child.ID) |
-|  0.8916912|  0.7077749|  0.2017953|  0.6612800|  604.6341|  604.7788|  619.1957| CHI\_MLU  | Visit                                   | (1|Child.ID) |
-|  0.8180122|  0.6421205|  0.3505035|  0.6602473|  589.8709|  590.0886|  608.0728| CHI\_MLU  | Visit+Diagnosis                         | (1|Child.ID) |
-|  0.7830034|  0.6141897|  0.4126399|  0.7342020|  534.8039|  535.1098|  556.6462| CHI\_MLU  | Visit\*Diagnosis                        | (1|Child.ID) |
-|  0.6746894|  0.5234308|  0.5820707|  0.7333992|  506.7022|  507.1116|  532.1849| CHI\_MLU  | Visit\*Diagnosis+verbalIQ1              | (1|Child.ID) |
-|  0.6470813|  0.4985191|  0.6320215|  0.7767039|  471.5796|  472.2425|  504.3431| CHI\_MLU  | Visit*Diagnosis+verbalIQ1*MOT\_MLU      | (1|Child.ID) |
-|  0.6746894|  0.5234308|  0.5820707|  0.7333992|  506.7022|  507.1116|  532.1849| CHI\_MLU  | Visit\*Diagnosis+verbalIQ1              | (1|Child.ID) |
-|  0.7533921|  0.5902935|  0.4604220|  0.7352463|  530.2895|  530.6989|  555.7722| CHI\_MLU  | Visit\*Diagnosis+Ados1                  | (1|Child.ID) |
-|  0.7383722|  0.5784177|  0.4891753|  0.7628422|  498.3764|  498.7858|  523.8591| CHI\_MLU  | Visit\*Diagnosis+MOT\_MLU               | (1|Child.ID) |
-|  0.7423569|  0.5762063|  0.4797657|  0.7345868|  527.1794|  527.5888|  552.6621| CHI\_MLU  | Visit\*Diagnosis+nonVerbalIQ1           | (1|Child.ID) |
-|  0.6771471|  0.5256053|  0.5829786|  0.7332972|  508.4522|  508.9805|  537.5753| CHI\_MLU  | Visit\*Diagnosis+nonVerbalIQ1+verbalIQ1 | (1|Child.ID) |
-|  0.7434633|  0.5811787|  0.4923874|  0.7352434|  527.2559|  527.7843|  556.3790| CHI\_MLU  | Visit\*Diagnosis+nonVerbalIQ1+Ados1     | (1|Child.ID) |
+|  0.9293728|  0.7701577|  0.1300318|  0.4866323|  692.8961|  693.0407|  707.4576| CHI\_MLU  | Diagnosis                               | (1|Child.ID) |
+|  0.9004808|  0.7076423|  0.1820124|  0.7043010|  576.8448|  576.9894|  591.4063| CHI\_MLU  | Visit                                   | (1|Child.ID) |
+|  0.8271279|  0.6473646|  0.3124565|  0.7036148|  566.0123|  566.2301|  584.2143| CHI\_MLU  | Visit+Diagnosis                         | (1|Child.ID) |
+|  0.7940748|  0.6262550|  0.3671054|  0.7682930|  510.5840|  510.8900|  532.4264| CHI\_MLU  | Visit\*Diagnosis                        | (1|Child.ID) |
+|  0.6428924|  0.4928835|  0.6109134|  0.7674824|  473.3376|  473.7471|  498.8204| CHI\_MLU  | Visit\*Diagnosis+verbalIQ1              | (1|Child.ID) |
+|  0.6088961|  0.4627065|  0.6651125|  0.8030425|  434.5089|  435.1718|  467.2724| CHI\_MLU  | Visit*Diagnosis+verbalIQ1*MOT\_MLU      | (1|Child.ID) |
+|  0.6428924|  0.4928835|  0.6109134|  0.7674824|  473.3376|  473.7471|  498.8204| CHI\_MLU  | Visit\*Diagnosis+verbalIQ1              | (1|Child.ID) |
+|  0.7229781|  0.5679806|  0.4863880|  0.7698174|  497.6202|  498.0296|  523.1029| CHI\_MLU  | Visit\*Diagnosis+Ados1                  | (1|Child.ID) |
+|  0.7318631|  0.5726894|  0.4487894|  0.7872055|  473.4737|  473.8831|  498.9564| CHI\_MLU  | Visit\*Diagnosis+MOT\_MLU               | (1|Child.ID) |
+|  0.7101439|  0.5556875|  0.5065738|  0.7688111|  494.1251|  494.5345|  519.6078| CHI\_MLU  | Visit\*Diagnosis+nonVerbalIQ1           | (1|Child.ID) |
+|  0.6443610|  0.4952499|  0.6146813|  0.7677227|  474.4486|  474.9769|  503.5717| CHI\_MLU  | Visit\*Diagnosis+nonVerbalIQ1+verbalIQ1 | (1|Child.ID) |
+|  0.6854133|  0.5339729|  0.5418509|  0.7698802|  490.3338|  490.8622|  519.4570| CHI\_MLU  | Visit\*Diagnosis+nonVerbalIQ1+Ados1     | (1|Child.ID) |
 
 ``` r
 tableCV_mixed <- CV_mixed[,1:7]
@@ -308,12 +295,12 @@ You want to evaluate:
 #get only bernies data
 Bernie <- filter(test_data, Child.ID == "2")
 
-TD_skills <- subset(train_data, Diagnosis == "TD") %>% group_by(Visit) %>% summarise(AverageTD = mean(CHI_MLU))
+TD_skills <- subset(train_data, Diagnosis == "TD") %>% group_by(Visit) %>% summarise(Mean_TD = mean(CHI_MLU), SD_TD = sd(CHI_MLU))
 Bernie_skills <- subset(Bernie) %>% group_by(Visit) %>% summarize (Bernie = CHI_MLU)
 
 #combine the 2 dataframes from above and add a column with the difference in total numbers
 superior_Bernie <- merge(Bernie_skills, TD_skills)
-superior_Bernie$Difference <- superior_Bernie$Bernie - superior_Bernie$AverageTD
+superior_Bernie$Difference <- superior_Bernie$Bernie - superior_Bernie$Mean_TD
 
 #create model
 THEmodel <- lmer(CHI_MLU ~ Diagnosis*Visit + verbalIQ1*MOT_MLU + (1|Child.ID), data = train_data)

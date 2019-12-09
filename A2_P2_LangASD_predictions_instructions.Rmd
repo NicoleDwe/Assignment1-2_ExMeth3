@@ -107,7 +107,6 @@ token_train <- read.csv("token_train.csv")
 train_data1 <- CleanUpData(Demo = demo_train, LU = lu_train, Word = token_train)
 train_data <- subset(train_data1, !is.na(CHI_MLU))
 
-
 #test data
 lu_test <- read.csv("LU_test.csv")
 demo_test <- read.csv("demo_test.csv")
@@ -181,16 +180,10 @@ fold_data %>% head(15) %>% kable()
 CV1 <- cross_validate(fold_data, "CHI_MLU ~ Diagnosis + Visit + (1|Child.ID) + (0+Visit|Child.ID)",
                       fold_cols = '.folds',
                       family = 'gaussian',
-                        control = lmerControl(
-                          optimizer = "nloptwrap",
-                          calc.dervis = FALSE, 
-                          optCtrl = list(
-                            xtol_abs = 1e-10,
-                            xtol_abs = 1e-10,
-                            maxeval = 1000000),
-                      rm_nc = F,
-                      REML = FALSE))
+                        rm_nc = F,
+                        REML = FALSE)
                       
+#control = lmerControl(optimizer = "nloptwrap",calc.dervis = FALSE, optCtrl = list(xtol_abs = 1e-10,xtol_abs = 1e-10,maxeval = 1000000),
                       
 CV1 %>% select_metrics() %>% kable()
 tableCV1 <- CV1[1:7]
@@ -225,15 +218,8 @@ mixed_models <- c("CHI_MLU ~ Diagnosis + (1 | Child.ID)",
 CV_mixed <- cross_validate(fold_data, mixed_models,
                       fold_cols = '.folds',
                       family = 'gaussian',
-                        control = lmerControl(
-                          optimizer = "nloptwrap",
-                          calc.dervis = FALSE, 
-                          optCtrl = list(
-                            xtol_abs = 1e-10,
-                            xtol_abs = 1e-10,
-                            maxeval = 1000000),
                       rm_nc = F,
-                      REML = FALSE))
+                      REML = FALSE) 
 
 CV_mixed %>% select_metrics() %>% kable()
 tableCV_mixed <- CV_mixed[,1:7]
@@ -268,12 +254,12 @@ You want to evaluate:
 #get only bernies data
 Bernie <- filter(test_data, Child.ID == "2")
 
-TD_skills <- subset(train_data, Diagnosis == "TD") %>% group_by(Visit) %>% summarise(AverageTD = mean(CHI_MLU))
+TD_skills <- subset(train_data, Diagnosis == "TD") %>% group_by(Visit) %>% summarise(Mean_TD = mean(CHI_MLU), SD_TD = sd(CHI_MLU))
 Bernie_skills <- subset(Bernie) %>% group_by(Visit) %>% summarize (Bernie = CHI_MLU)
 
 #combine the 2 dataframes from above and add a column with the difference in total numbers
 superior_Bernie <- merge(Bernie_skills, TD_skills)
-superior_Bernie$Difference <- superior_Bernie$Bernie - superior_Bernie$AverageTD
+superior_Bernie$Difference <- superior_Bernie$Bernie - superior_Bernie$Mean_TD
 
 #create model
 THEmodel <- lmer(CHI_MLU ~ Diagnosis*Visit + verbalIQ1*MOT_MLU + (1|Child.ID), data = train_data)
